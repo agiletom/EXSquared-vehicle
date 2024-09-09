@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  nest-app:
+    build: .
+    container_name: nest-app
+    restart: always
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    networks:
+      - nest-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - nest-network
+
+volumes:
+  mongo-data:
+
+networks:
+  nest-network:
+    driver: bridge
