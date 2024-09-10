@@ -107,7 +107,10 @@ export class VehicleService {
         );
       }
 
-      // Step 5: Insert data in batches of 100
+      // Step 5: Clear existing data before inserting new data
+      await this.vehicleModel.deleteMany({});
+
+      // Step 6: Insert data in batches of 100
       const batchSize = 100;
       for (let i = 0; i < vehiclesToInsert.length; i += batchSize) {
         const batch = vehiclesToInsert.slice(i, i + batchSize);
