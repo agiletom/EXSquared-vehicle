@@ -15,11 +15,11 @@ class VehicleType {
 @Schema()
 export class Vehicle extends Document {
   @Field(() => String)
-  @Prop()
+  @Prop({ index: true })
   makeId: string;
 
   @Field(() => String)
-  @Prop()
+  @Prop({ index: true })
   makeName: string;
 
   @Field(() => [VehicleType])
