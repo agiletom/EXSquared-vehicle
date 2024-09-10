@@ -1,85 +1,120 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# EX Squared LATAM Assessment - Vehicle
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a NestJS-based application that includes GraphQL integration, MongoDB with Mongoose, and Dockerization. The project is set up with a CI/CD pipeline using GitHub Actions, and the application is containerized with Docker for production.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Running the Application](#running-the-application)
+  - [Development Mode](#development-mode)
+  - [Docker Setup](#docker-setup)
+    - [Build Docker Image](#build-docker-image)
+    - [Run with Docker Compose](#run-with-docker-compose)
+    - [Stopping the Containers](#stopping-the-containers)
+    - [Rebuilding the Docker Images](#rebuilding-the-docker-images)
+    - [Logs](#logs)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Technologies](#technologies)
 
-## Description
+## Getting Started
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Prerequisites
 
-## Project setup
+- **Node.js** (version 16 or higher)
+- **MongoDB** (Ensure MongoDB is installed and running)
+- **Docker** (for containerized environment)
+
+### Installation
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/agiletom/EXSquared-vehicle
+    cd EXSquared-vehicle
+    ```
+
+2. **Install dependencies**:
+    ```bash
+    npm install
+    ```
+
+3. **Set up environment variables**: Create a `.env` file at the root of your project and add the necessary environment variables:
+    ```bash
+    MONGO_URI=mongodb://localhost:27017/vehicle
+    FETCH_WITH_RETRY_TIMES=3
+    ```
+
+## Running the Application
+
+### Development Mode
+
+To run the application in development mode with hot-reload:
 
 ```bash
-$ npm install
+npm run start:dev
 ```
 
-## Compile and run the project
-
+## Docker Setup
+### Build Docker Image
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker build -t nest-app .
 ```
-
-## Run tests
-
+### Run with Docker Compose
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up --build
+```
+- Build the NestJS app and MongoDB containers.
+- Start MongoDB on port `27017` .
+- Start the NestJS app on port `3000` .
+### Stopping the Containers
+```bash
+docker-compose down
+```
+### Rebuilding the Docker Images
+```bash
+docker-compose up --build
+```
+### Logs
+```bash
+docker-compose logs -f
 ```
 
-## Resources
+### Docker Setup
+### Build Docker Image
+```bash
+docker build -t vehicle-app .
+```
+### Run with Docker Compose
+```bash
+docker-compose up --build
+```
+- Build the app and MongoDB containers.
+- Start MongoDB on port `27017` .
+- Start the app on port `3000` .
+### Stopping the Containers
+```bash
+docker-compose down
+```
+### Rebuilding the Docker Images
+```bash
+docker-compose up --build
+```
+### Logs
+```bash
+docker-compose logs -f
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## Technologies
+- **NestJS** - A progressive Node.js framework for building efficient, reliable, and scalable applications.
+- **GraphQL** - A query language for your API to give clients the power to ask for exactly what they need.
+- **MongoDB** - NoSQL database for the backend.
+- **Mongoose** - ODM for MongoDB.
+- **Jest** - A delightful JavaScript testing framework with a focus on simplicity.
+- **Docker** - A container platform to build, ship, and run distributed applications.
+- **GitHub Actions** - CI/CD pipeline for automated tests and Docker deployment.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Key Points:
+1. **Getting Started**: Installation and setup instructions.
+2. **Running the Application**: Explains how to run the app in different modes (development, production, Docker).
+3. **CI/CD Pipeline**: Explains the automated pipeline and GitHub Actions setup.
+4. **Technologies**: Lists the technologies used in the project.
