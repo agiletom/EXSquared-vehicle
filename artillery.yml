@@ -1,0 +1,25 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 1
+      arrivalRate: 5000 # Simulate 1000 users over the duration
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+
+scenarios:
+  - flow:
+      - post:
+          url: '/graphql'
+          json:
+            query: |
+              {
+                getVehicles(makeName: "", limit: 5, offset: 0) {
+                  makeId
+                  makeName
+                  vehicleTypes {
+                    VehicleTypeId
+                    VehicleTypeName
+                  }
+                }
+              }
