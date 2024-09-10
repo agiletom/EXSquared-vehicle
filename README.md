@@ -15,7 +15,10 @@ This is a NestJS-based application that includes GraphQL integration, MongoDB wi
     - [Rebuilding the Docker Images](#rebuilding-the-docker-images)
     - [Logs](#logs)
 - [CI/CD Pipeline](#cicd-pipeline)
+- [API Endpoints](#api-endpoints)
+- [Performance Testing with Artillery](#performance-testing-with-artillery)
 - [Technologies](#technologies)
+- [Key points](#key-points)
 
 ## Getting Started
 
@@ -103,6 +106,49 @@ docker-compose up --build
 ### Logs
 ```bash
 docker-compose logs -f
+```
+
+## API Endpoints
+### Fetch All Vehicles
+The `/vehicles/fetch` endpoint triggers the fetching and storing of all vehicle data from the external API (`https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=XML`).
+
+- **URL**: `http://localhost:3000/vehicles/fetch` 
+- **Method**: `GET` 
+- **Description**: This endpoint fetches all vehicles from the external API, parses the data, and stores it in the MongoDB database. It also handles retry mechanisms in case of network failures.
+### GraphQL Endpoint
+The GraphQL endpoint is exposed at `http://localhost:3000/graphql`.
+
+To fetch vehicle data from the external API, use the following GraphQL query:
+
+#### Query Example
+```graphql
+graphqlCopy code{
+  getVehicles(makeName: "", limit: 5, offset: 0) {
+    makeId
+    makeName
+    vehicleTypes {
+      VehicleTypeId
+      VehicleTypeName
+    }
+  }
+}
+```
+This query allows you to:
+
+- Fetch vehicles with the `makeName`  filter (can be left empty for all vehicles).
+- Limit the number of results with the `limit`  argument.
+- Use `offset`  to paginate the results.
+
+## Performance Testing with Artillery
+To ensure the application can handle concurrent requests efficiently, it is essential to perform stress testing. This helps identify any potential bottlenecks and ensures the system is resilient under high loads. Follow the steps below to conduct performance testing using Artillery, a modern, powerful, and easy-to-use load testing toolkit.
+### Install Artillery
+```bash
+npm install -g artillery
+```
+
+### Run the Performance Test
+```bash
+artillery run artillery.yml
 ```
 
 ## Technologies
