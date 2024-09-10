@@ -40,7 +40,8 @@ This is a NestJS-based application that includes GraphQL integration, MongoDB wi
 
 3. **Set up environment variables**: Create a `.env` file at the root of your project and add the necessary environment variables:
     ```bash
-    MONGO_URI=mongodb://localhost:27017/vehicle
+    DATABASE_URL=mongodb://localhost:27017/vehicle
+    DATABASE_MAX_POOL_LIMIT=50
     FETCH_WITH_RETRY_TIMES=3
     ```
 

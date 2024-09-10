@@ -19,6 +19,8 @@ import { ParseXmlService } from './common/services/parse-xml.service';
           'mongodb://localhost:27017/vehicle', // Fallback to localhost
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        maxPoolSize:
+          parseInt(configService.get<string>('DATABASE_MAX_POOL_LIMIT')) || 50,
       }),
       inject: [ConfigService],
     }),
