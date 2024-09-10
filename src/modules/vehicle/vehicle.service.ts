@@ -39,7 +39,7 @@ export class VehicleService {
       const jsonData = await this.parseXmlService.parseXmlToJson(xmlData);
 
       // Step 3: Map vehicle types to structured objects for the database
-      const vehicleTypes = jsonData.VehicleTypesForMakeIds.map((type) => ({
+      const vehicleTypes = jsonData.VehicleTypesForMakeIds?.map((type) => ({
         VehicleTypeId: JSON.stringify(type.VehicleTypeId),
         VehicleTypeName: JSON.stringify(type.VehicleTypeName),
       }));
@@ -79,15 +79,23 @@ export class VehicleService {
           makeName: make.Make_Name[0], // Store makeName as a string
           vehicleTypes: vehicleTypes, // Store associated vehicle types
         });
+
+        Logger.log(
+          `${vehiclesToInsert.length} Vehicle data has been successfully prepared for insertion.`,
+        );
       }
 
-      // Step 5: Perform a bulk insert of all the prepared vehicle documents
-      if (vehiclesToInsert.length > 0) {
-        await this.vehicleModel.insertMany(vehiclesToInsert);
+      // Step 5: Insert data in batches of 100
+      const batchSize = 100;
+      for (let i = 0; i < vehiclesToInsert.length; i += batchSize) {
+        const batch = vehiclesToInsert.slice(i, i + batchSize);
+        await this.vehicleModel.insertMany(batch);
         Logger.log(
-          `${vehiclesToInsert.length} vehicles have been successfully inserted.`,
+          `${batch.length} vehicles have been successfully inserted in this batch.`,
         );
-      } else {
+      }
+
+      if (vehiclesToInsert.length === 0) {
         Logger.log('No vehicles to insert.');
       }
     } catch (error) {
