@@ -1,17 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
+import * as NodeCache from 'node-cache';
 import { Vehicle } from './entities/vehicle.schema';
 import { ParseXmlService } from '../../common/services/parse-xml.service'; // Import ParseXmlService
 import { fetchWithRetry } from '../../utils';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const NodeCache = require('node-cache');
-
 @Injectable()
 export class VehicleService {
-  private cache: any;
+  private cache: NodeCache;
 
   constructor(
     @InjectModel(Vehicle.name) private vehicleModel: Model<Vehicle>,
