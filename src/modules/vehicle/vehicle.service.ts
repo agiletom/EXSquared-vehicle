@@ -92,7 +92,6 @@ export class VehicleService {
 
       // Step 4: Iterate through the parsed vehicle makes and prepare them for insertion
       for (const make of jsonData.AllVehicleMakes) {
-        if (vehiclesToInsert.length >= 10) break; // Limit to 10 vehicles for demonstration
         const makeId = parseInt(make.Make_ID[0], 10); // Convert Make_ID to a number
         const vehicleTypes = await this.getVehicleTypesByMakeId(makeId); // Fetch associated vehicle types
 
