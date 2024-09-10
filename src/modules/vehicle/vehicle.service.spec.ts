@@ -15,6 +15,7 @@ describe('VehicleService', () => {
   const mockVehicleModel = {
     find: jest.fn(),
     insertMany: jest.fn(), // Mock insertMany for the error scenario
+    deleteMany: jest.fn(), // Mock deleteMany for the error scenario
   };
 
   const mockParseXmlService = {
@@ -105,7 +106,7 @@ describe('VehicleService', () => {
       (fetchWithRetry as jest.Mock).mockResolvedValue(xmlData);
       mockParseXmlService.parseXmlToJson.mockResolvedValue(jsonData);
 
-      const result = await service.getVehicleTypesByMakeId(440);
+      const result = await service.getVehicleTypesByMakeId(12858);
       expect(result).toEqual([
         {
           VehicleTypeId: JSON.stringify('1'),
@@ -113,7 +114,7 @@ describe('VehicleService', () => {
         },
       ]);
       expect(fetchWithRetry).toHaveBeenCalledWith(
-        'https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleTypesForMakeId/440?format=xml',
+        'https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleTypesForMakeId/12858?format=xml',
       );
     });
 
@@ -122,11 +123,11 @@ describe('VehicleService', () => {
         new Error('Network error'),
       );
 
-      await expect(service.getVehicleTypesByMakeId(440)).rejects.toThrow(
-        'Error fetching vehicle types for makeId 440',
+      await expect(service.getVehicleTypesByMakeId(12858)).rejects.toThrow(
+        'Error fetching vehicle types for makeId 12858',
       );
       expect(fetchWithRetry).toHaveBeenCalledWith(
-        'https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleTypesForMakeId/440?format=xml',
+        'https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleTypesForMakeId/12858?format=xml',
       );
     });
   });
@@ -135,7 +136,7 @@ describe('VehicleService', () => {
     test('should fetch and insert vehicles', async () => {
       const xmlData = '<xml>data</xml>';
       const jsonData = {
-        AllVehicleMakes: [{ Make_ID: ['440'], Make_Name: ['Toyota'] }],
+        AllVehicleMakes: [{ Make_ID: ['12858'], Make_Name: ['Toyota'] }],
       };
 
       const vehicleTypes = [{ VehicleTypeId: '1', VehicleTypeName: 'SUV' }];
@@ -147,16 +148,17 @@ describe('VehicleService', () => {
         .mockResolvedValue(vehicleTypes);
 
       await service.fetchAndStoreVehicleData();
+      expect(fetchWithRetry).toHaveBeenCalledWith(
+        'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=XML',
+      );
+      expect(mockVehicleModel.deleteMany).toHaveBeenCalledWith({});
       expect(mockVehicleModel.insertMany).toHaveBeenCalledWith([
         {
-          makeId: 440,
+          makeId: 12858,
           makeName: 'Toyota',
           vehicleTypes: vehicleTypes,
         },
       ]);
-      expect(fetchWithRetry).toHaveBeenCalledWith(
-        'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=XML',
-      );
     });
 
     test('should handle errors during vehicle fetching', async () => {
