@@ -34,6 +34,7 @@
     "graphql": "^16.9.0",
     "mongoose": "^8.6.1",
     "nest-app": "file:",
+    "node-cache": "^5.1.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "xml2js": "^0.6.2"

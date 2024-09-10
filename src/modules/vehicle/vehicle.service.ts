@@ -1,16 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 import { Vehicle } from './entities/vehicle.schema';
 import { ParseXmlService } from '../../common/services/parse-xml.service'; // Import ParseXmlService
 import { fetchWithRetry } from '../../utils';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const NodeCache = require('node-cache');
+
 @Injectable()
 export class VehicleService {
+  private cache: any;
+
   constructor(
     @InjectModel(Vehicle.name) private vehicleModel: Model<Vehicle>,
     private readonly parseXmlService: ParseXmlService, // Inject ParseXmlService
-  ) {}
+  ) {
+    this.cache = new NodeCache({ stdTTL: 60 });
+  }
 
   // Fetch vehicles with optional makeName filter and pagination
   async getVehicles(
@@ -18,13 +26,27 @@ export class VehicleService {
     limit = 10,
     offset = 0,
   ): Promise<Vehicle[]> {
-    const filter = makeName ? { makeName: new RegExp(makeName, 'i') } : {}; // Filter vehicles based on makeName (if provided)
+    const cacheKey = `vehicles_${makeName || 'all'}_${limit}_${offset}`;
 
-    return this.vehicleModel
+    // Step 1: Check if data is in cache
+    const cachedVehicles = this.cache.get(cacheKey) as Vehicle[];
+    if (cachedVehicles) {
+      Logger.log('Returning cached data');
+      return cachedVehicles; // Return cached data if available
+    }
+
+    // Step 2: If not in cache, fetch from the database
+    const filter = makeName ? { makeName: new RegExp(makeName, 'i') } : {};
+    const vehicles = await this.vehicleModel
       .find(filter)
-      .skip(offset) // Pagination: Skip the number of documents based on offset
-      .limit(limit) // Limit the number of documents to return
+      .skip(offset)
+      .limit(limit)
       .exec();
+
+    // Step 3: Store the result in cache
+    this.cache.set(cacheKey, vehicles);
+
+    return vehicles;
   }
 
   // Fetch vehicle types by MakeId from the external API, handling potential errors
@@ -70,6 +92,7 @@ export class VehicleService {
 
       // Step 4: Iterate through the parsed vehicle makes and prepare them for insertion
       for (const make of jsonData.AllVehicleMakes) {
+        if (vehiclesToInsert.length >= 10) break; // Limit to 10 vehicles for demonstration
         const makeId = parseInt(make.Make_ID[0], 10); // Convert Make_ID to a number
         const vehicleTypes = await this.getVehicleTypesByMakeId(makeId); // Fetch associated vehicle types
 
