@@ -16,7 +16,7 @@ import { ParseXmlService } from './common/services/parse-xml.service';
       useFactory: (configService: ConfigService) => ({
         uri:
           configService.get<string>('DATABASE_URL') ||
-          'mongodb://localhost:27017/vehicle', // Fallback to localhost
+          'mongodb://mongo:27017/vehicle',
         useNewUrlParser: true,
         useUnifiedTopology: true,
         maxPoolSize:
